@@ -1,0 +1,5 @@
+<resources>
+    <style name="Theme.Yacht" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowBackground">@android:color/black</item>
+    </style>
+</resources>

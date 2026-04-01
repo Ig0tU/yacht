@@ -1,0 +1,34 @@
+# Local tooling
+.codex/
+.idea/
+.vscode/
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Android/Gradle
+.gradle/
+**/build/
+local.properties
+
+# Secrets
+.env
+.env.*
+!.env.example
+**/keystore.properties
+**/*.jks
+**/*.keystore
+**/*.p12
+**/*.pfx
+**/*.pem
+
+# Local data
+**/data/
+*.db
+*.sqlite
+
+# Reports
+*yacht-env-report.json

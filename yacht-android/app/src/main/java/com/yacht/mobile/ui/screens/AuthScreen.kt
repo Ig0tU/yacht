@@ -33,8 +33,9 @@ import com.yacht.mobile.ui.theme.SurfaceElevated
 @Composable
 fun AuthScreen(
     state: MainUiState,
-    onAuth: (String, String, Boolean) -> Unit
+    onAuth: (String, String, String, Boolean) -> Unit
 ) {
+    var baseUrl by rememberSaveable { mutableStateOf(state.baseUrl) }
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var createAccount by rememberSaveable { mutableStateOf(false) }
@@ -64,6 +65,13 @@ fun AuthScreen(
                 }
                 MessageBanner(state.message)
                 OutlinedTextField(
+                    value = baseUrl,
+                    onValueChange = { baseUrl = it },
+                    label = { Text("Server URL") },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = !state.busy
+                )
+                OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
                     label = { Text("Email") },
@@ -91,8 +99,8 @@ fun AuthScreen(
                     )
                 }
                 Button(
-                    onClick = { onAuth(email, password, createAccount) },
-                    enabled = !state.busy,
+                    onClick = { onAuth(baseUrl, email, password, createAccount) },
+                    enabled = !state.busy && baseUrl.isNotBlank(),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(if (createAccount) "Create account" else "Login")

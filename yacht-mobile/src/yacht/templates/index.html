@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Yacht Web Interface</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #0B0F1A; color: white; }
+        .card { background: #161C2C; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        input, button { padding: 10px; border-radius: 4px; border: 1px solid #2C3444; background: #0B0F1A; color: white; }
+        button { background: #00D1FF; color: #0B0F1A; font-weight: bold; cursor: pointer; }
+        pre { background: #000; padding: 10px; border-radius: 4px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Yacht Web Interface</h1>
+
+    <div class="card">
+        <h2>Remote Status</h2>
+        <div hx-get="/status" hx-trigger="load, every 10s">
+            Checking remote status...
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Pull Image</h2>
+        <form hx-post="/pull" hx-target="#pull-result" hx-indicator="#pull-indicator">
+            <input type="text" name="image" placeholder="e.g. alpine:latest" style="width: 70%;">
+            <button type="submit">Pull</button>
+        </form>
+        <div id="pull-indicator" class="htmx-indicator">Pulling...</div>
+        <div id="pull-result"></div>
+    </div>
+
+    <div class="card">
+        <h2>Run Container (Remote)</h2>
+        <form hx-post="/run" hx-target="#run-result">
+            <input type="text" name="image" placeholder="image" style="width: 30%;">
+            <input type="text" name="cmd" placeholder="command (optional)" style="width: 40%;">
+            <button type="submit">Run</button>
+        </form>
+        <div id="run-result"></div>
+    </div>
+</body>
+</html>

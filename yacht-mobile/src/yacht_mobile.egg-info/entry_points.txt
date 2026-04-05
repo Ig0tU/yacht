@@ -1,0 +1,2 @@
+[console_scripts]
+yacht = yacht.cli:main

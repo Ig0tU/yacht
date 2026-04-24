@@ -166,6 +166,14 @@ def cmd_compose_up(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_serve(args: argparse.Namespace) -> int:
+    import uvicorn
+    from .webapp import app
+    print(f"Starting web interface on http://{args.host}:{args.port}")
+    uvicorn.run(app, host=args.host, port=args.port)
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="yacht", description="Yacht mobile container shim (MVP)")
     p.add_argument("--version", action="version", version=f"yacht-mobile {__version__}")
@@ -208,6 +216,11 @@ def build_parser() -> argparse.ArgumentParser:
     compose_up_cmd = compose_sub.add_parser("up", help="start compose services remotely")
     compose_up_cmd.add_argument("-f", "--file", default="docker-compose.yml")
     compose_up_cmd.set_defaults(func=cmd_compose_up)
+
+    serve = sub.add_parser("serve", help="launch web interface")
+    serve.add_argument("--host", default="127.0.0.1")
+    serve.add_argument("--port", type=int, default=8000)
+    serve.set_defaults(func=cmd_serve)
 
     return p
 

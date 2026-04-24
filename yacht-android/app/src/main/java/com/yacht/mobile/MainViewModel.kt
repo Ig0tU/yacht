@@ -22,7 +22,8 @@ data class MainUiState(
     val message: String = "",
     val busy: Boolean = false,
     val remoteStatus: RemoteStatusUi? = null,
-    val activity: List<String> = emptyList()
+    val activity: List<String> = emptyList(),
+    val baseUrl: String = ""
 )
 
 data class RemoteStatusUi(
@@ -31,16 +32,17 @@ data class RemoteStatusUi(
 )
 
 class MainViewModel(private val repo: AppRepository) : ViewModel() {
-    private val _state = MutableStateFlow(MainUiState())
+    private val _state = MutableStateFlow(MainUiState(baseUrl = repo.getBaseUrl()))
     val state: StateFlow<MainUiState> = _state.asStateFlow()
 
     init {
         viewModelScope.launch { refreshQuotaInternal() }
     }
 
-    fun authenticate(email: String, password: String, createAccount: Boolean) = viewModelScope.launch {
+    fun authenticate(baseUrl: String, email: String, password: String, createAccount: Boolean) = viewModelScope.launch {
         runCatching {
-            _state.value = _state.value.copy(busy = true, message = "")
+            _state.value = _state.value.copy(busy = true, message = "", baseUrl = baseUrl)
+            repo.updateBaseUrl(baseUrl)
             repo.authenticate(email, password, createAccount)
             refreshQuotaInternal(if (createAccount) "Account created" else "Logged in")
         }.onFailure {
